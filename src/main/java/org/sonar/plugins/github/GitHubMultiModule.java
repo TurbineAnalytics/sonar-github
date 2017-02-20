@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -27,25 +27,25 @@ import org.sonar.api.PropertyType;
 
 @Properties({
   @Property(
-    key = GitHubPlugin.GITHUB_ENDPOINT,
+    key = GitHubMultiModule.GITHUB_ENDPOINT,
     defaultValue = "https://api.github.com",
     name = "GitHub API Endpoint",
     description = "URL to access GitHub WS API. Default value is fine for public GitHub. Can be modified for GitHub enterprise.",
     global = true),
   @Property(
-    key = GitHubPlugin.GITHUB_OAUTH,
+    key = GitHubMultiModule.GITHUB_OAUTH,
     name = "GitHub OAuth token",
     description = "Authentication token",
     global = false,
     type = PropertyType.PASSWORD),
   @Property(
-    key = GitHubPlugin.GITHUB_REPO,
+    key = GitHubMultiModule.GITHUB_REPO,
     name = "GitHub repository",
     description = "GitHub repository for this project. Will be guessed from '" + CoreProperties.LINKS_SOURCES_DEV + "' if present",
     project = false,
     global = false),
   @Property(
-    key = GitHubPlugin.GITHUB_PULL_REQUEST,
+    key = GitHubMultiModule.GITHUB_PULL_REQUEST,
     name = "GitHub Pull Request",
     description = "Pull request number",
     project = false,
@@ -53,7 +53,7 @@ import org.sonar.api.PropertyType;
     global = false,
     type = PropertyType.INTEGER),
   @Property(
-    key = GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS,
+    key = GitHubMultiModule.GITHUB_DISABLE_INLINE_COMMENTS,
     defaultValue = "false",
     name = "Disable issue reporting as inline comments",
     description = "Issues will not be reported as inline comments but only in the global summary comment",
@@ -61,7 +61,7 @@ import org.sonar.api.PropertyType;
     global = true,
     type = PropertyType.BOOLEAN)
 })
-public class GitHubPlugin implements Plugin {
+public class GitHubMultiModule implements Plugin {
 
   public static final String GITHUB_ENDPOINT = "sonar.github.endpoint";
   public static final String GITHUB_OAUTH = "sonar.github.oauth";

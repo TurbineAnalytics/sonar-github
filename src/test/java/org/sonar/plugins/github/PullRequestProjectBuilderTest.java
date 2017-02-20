@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -19,7 +19,6 @@
  */
 package org.sonar.plugins.github;
 
-import java.io.File;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,14 +30,11 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.utils.MessageException;
 import org.sonar.api.utils.System2;
 
+import java.io.File;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
+import static org.mockito.Mockito.*;
 
 public class PullRequestProjectBuilderTest {
 
@@ -52,7 +48,7 @@ public class PullRequestProjectBuilderTest {
 
   @Before
   public void prepare() {
-    settings = new Settings(new PropertyDefinitions(GitHubPlugin.class));
+    settings = new Settings(new PropertyDefinitions(GitHubMultiModule.class));
     facade = mock(PullRequestFacade.class);
     mode = mock(AnalysisMode.class);
     pullRequestProjectBuilder = new PullRequestProjectBuilder(new GitHubPluginConfiguration(settings, new System2()), facade, mode);
@@ -67,7 +63,7 @@ public class PullRequestProjectBuilderTest {
 
   @Test
   public void shouldFailIfNotPreview() {
-    settings.setProperty(GitHubPlugin.GITHUB_PULL_REQUEST, "1");
+    settings.setProperty(GitHubMultiModule.GITHUB_PULL_REQUEST, "1");
 
     thrown.expect(MessageException.class);
     thrown.expectMessage("The GitHub plugin is only intended to be used in preview or issues mode. Please set 'sonar.analysis.mode'.");
@@ -77,7 +73,7 @@ public class PullRequestProjectBuilderTest {
 
   @Test
   public void shouldNotFailIfIssues() {
-    settings.setProperty(GitHubPlugin.GITHUB_PULL_REQUEST, "1");
+    settings.setProperty(GitHubMultiModule.GITHUB_PULL_REQUEST, "1");
     when(mode.isIssues()).thenReturn(true);
 
     pullRequestProjectBuilder.build(mock(ProjectBuilder.Context.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS)));

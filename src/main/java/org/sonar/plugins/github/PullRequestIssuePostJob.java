@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -56,7 +56,7 @@ public class PullRequestIssuePostJob implements PostJob {
   public void describe(PostJobDescriptor descriptor) {
     descriptor
       .name("GitHub Pull Request Issue Publisher")
-      .requireProperty(GitHubPlugin.GITHUB_PULL_REQUEST);
+      .requireProperty(GitHubMultiModule.GITHUB_PULL_REQUEST);
   }
 
   @Override

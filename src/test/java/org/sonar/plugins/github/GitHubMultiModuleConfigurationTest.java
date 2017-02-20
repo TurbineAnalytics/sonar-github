@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -19,7 +19,6 @@
  */
 package org.sonar.plugins.github;
 
-import java.net.Proxy;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,11 +29,13 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.utils.MessageException;
 import org.sonar.api.utils.System2;
 
+import java.net.Proxy;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GitHubPluginConfigurationTest {
+public class GitHubMultiModuleConfigurationTest {
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -44,7 +45,7 @@ public class GitHubPluginConfigurationTest {
 
   @Before
   public void prepare() {
-    settings = new Settings(new PropertyDefinitions(GitHubPlugin.class));
+    settings = new Settings(new PropertyDefinitions(GitHubMultiModule.class));
     config = new GitHubPluginConfiguration(settings, new System2());
   }
 
@@ -54,7 +55,7 @@ public class GitHubPluginConfigurationTest {
       config.repository();
     } catch (Exception e) {
       assertThat(e).isInstanceOf(MessageException.class)
-        .hasMessage("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.GITHUB_REPO
+        .hasMessage("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubMultiModule.GITHUB_REPO
           + "' or configure property '" + CoreProperties.LINKS_SOURCES + "'.");
     }
 
@@ -89,30 +90,30 @@ public class GitHubPluginConfigurationTest {
     settings.removeProperty(CoreProperties.LINKS_SOURCES);
     assertThat(config.repository()).isEqualTo("SonarCommunity2/github-integration");
 
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "https://github.com/SonarCommunity/sonar-github.git");
+    settings.setProperty(GitHubMultiModule.GITHUB_REPO, "https://github.com/SonarCommunity/sonar-github.git");
     assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-github");
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "http://github.com/SonarCommunity/sonar-github.git");
+    settings.setProperty(GitHubMultiModule.GITHUB_REPO, "http://github.com/SonarCommunity/sonar-github.git");
     assertThat(config.repository()).isEqualTo("SonarCommunity/sonar-github");
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "SonarCommunity3/github-integration");
+    settings.setProperty(GitHubMultiModule.GITHUB_REPO, "SonarCommunity3/github-integration");
     assertThat(config.repository()).isEqualTo("SonarCommunity3/github-integration");
   }
 
   @Test
   public void other() {
-    settings.setProperty(GitHubPlugin.GITHUB_OAUTH, "oauth");
+    settings.setProperty(GitHubMultiModule.GITHUB_OAUTH, "oauth");
     assertThat(config.oauth()).isEqualTo("oauth");
 
     assertThat(config.isEnabled()).isFalse();
-    settings.setProperty(GitHubPlugin.GITHUB_PULL_REQUEST, "3");
+    settings.setProperty(GitHubMultiModule.GITHUB_PULL_REQUEST, "3");
     assertThat(config.pullRequestNumber()).isEqualTo(3);
     assertThat(config.isEnabled()).isTrue();
 
     assertThat(config.endpoint()).isEqualTo("https://api.github.com");
-    settings.setProperty(GitHubPlugin.GITHUB_ENDPOINT, "http://myprivate-endpoint");
+    settings.setProperty(GitHubMultiModule.GITHUB_ENDPOINT, "http://myprivate-endpoint");
     assertThat(config.endpoint()).isEqualTo("http://myprivate-endpoint");
 
     assertThat(config.tryReportIssuesInline()).isTrue();
-    settings.setProperty(GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS, "true");
+    settings.setProperty(GitHubMultiModule.GITHUB_DISABLE_INLINE_COMMENTS, "true");
     assertThat(config.tryReportIssuesInline()).isFalse();
   }
 
@@ -126,7 +127,7 @@ public class GitHubPluginConfigurationTest {
     when(system2.property("https.proxyHost")).thenReturn("bar");
     assertThat(config.getHttpProxy()).isEqualTo(Proxy.NO_PROXY);
 
-    settings.setProperty(GitHubPlugin.GITHUB_ENDPOINT, "wrong url");
+    settings.setProperty(GitHubMultiModule.GITHUB_ENDPOINT, "wrong url");
     thrown.expect(IllegalArgumentException.class);
     config.getHttpProxy();
   }

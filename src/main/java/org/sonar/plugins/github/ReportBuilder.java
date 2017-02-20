@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -19,9 +19,10 @@
  */
 package org.sonar.plugins.github;
 
-import javax.annotation.Nullable;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.rule.Severity;
+
+import javax.annotation.Nullable;
 
 public interface ReportBuilder {
   /**

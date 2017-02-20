@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -62,17 +62,17 @@ public class GitHubPluginConfiguration {
     }
 
     public int pullRequestNumber() {
-        return settings.getInt(GitHubPlugin.GITHUB_PULL_REQUEST);
+        return settings.getInt(GitHubMultiModule.GITHUB_PULL_REQUEST);
     }
 
     public String repository() {
-        if (settings.hasKey(GitHubPlugin.GITHUB_REPO)) {
+        if (settings.hasKey(GitHubMultiModule.GITHUB_REPO)) {
             return repoFromProp();
         }
         if (isNotBlank(settings.getString(CoreProperties.LINKS_SOURCES_DEV)) || isNotBlank(settings.getString(CoreProperties.LINKS_SOURCES))) {
             return repoFromScmProps();
         }
-        throw MessageException.of("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubPlugin.GITHUB_REPO
+        throw MessageException.of("Unable to determine GitHub repository name for this project. Please provide it using property '" + GitHubMultiModule.GITHUB_REPO
                 + "' or configure property '" + CoreProperties.LINKS_SOURCES + "'.");
     }
 
@@ -94,7 +94,7 @@ public class GitHubPluginConfiguration {
     }
 
     private String repoFromProp() {
-        String urlOrRepo = settings.getString(GitHubPlugin.GITHUB_REPO);
+        String urlOrRepo = settings.getString(GitHubMultiModule.GITHUB_REPO);
         String repo = extractRepoFromGitUrl(urlOrRepo);
         if (repo == null) {
             return urlOrRepo;
@@ -117,23 +117,23 @@ public class GitHubPluginConfiguration {
 
     @CheckForNull
     public String oauth() {
-        return settings.getString(GitHubPlugin.GITHUB_OAUTH);
+        return settings.getString(GitHubMultiModule.GITHUB_OAUTH);
     }
 
     public boolean isEnabled() {
-        return settings.hasKey(GitHubPlugin.GITHUB_PULL_REQUEST);
+        return settings.hasKey(GitHubMultiModule.GITHUB_PULL_REQUEST);
     }
 
     public String endpoint() {
-        return settings.getString(GitHubPlugin.GITHUB_ENDPOINT);
+        return settings.getString(GitHubMultiModule.GITHUB_ENDPOINT);
     }
 
     public boolean tryReportIssuesInline() {
-        return !settings.getBoolean(GitHubPlugin.GITHUB_DISABLE_INLINE_COMMENTS);
+        return !settings.getBoolean(GitHubMultiModule.GITHUB_DISABLE_INLINE_COMMENTS);
     }
 
     public String module() {
-        return settings.getString(GitHubPlugin.SONAR_PROJECT_NAME);
+        return settings.getString(GitHubMultiModule.SONAR_PROJECT_NAME);
     }
 
     /**

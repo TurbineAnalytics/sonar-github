@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -19,12 +19,13 @@
  */
 package org.sonar.plugins.github;
 
+import org.sonar.api.batch.postjob.issue.PostJobIssue;
+import org.sonar.api.batch.rule.Severity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import org.sonar.api.batch.postjob.issue.PostJobIssue;
-import org.sonar.api.batch.rule.Severity;
 
 public class MarkDownReportBuilder implements ReportBuilder {
 

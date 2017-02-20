@@ -9,38 +9,38 @@
     <relativePath />
   </parent>
 
-  <groupId>org.sonarsource.github</groupId>
-  <artifactId>sonar-github-plugin</artifactId>
-  <name>SonarQube :: GitHub Plugin</name>
+  <groupId>org.sonarsource.githubmultimodule</groupId>
+  <artifactId>sonar-github-multimodule-plugin</artifactId>
+  <name>SonarQube :: GitHub MultiModule Plugin</name>
   <packaging>sonar-plugin</packaging>
-  <version>1.5-SNAPSHOT</version>
-  <description>Provide some integration between GitHub and SonarQube</description>
+  <version>1.5-CBD</version>
+  <description>Provide some integration between GitHub and SonarQube (Modified)</description>
   <url>http://redirect.sonarsource.com/plugins/github.html</url>
   <inceptionYear>2015</inceptionYear>
   
   <properties>
     <sonar.version>5.6</sonar.version>
-    <sonar.pluginName>GitHub</sonar.pluginName>
-    <sonar.pluginClass>org.sonar.plugins.github.GitHubPlugin</sonar.pluginClass>
+    <sonar.pluginName>GitHubMultiModule</sonar.pluginName>
+    <sonar.pluginClass>org.sonar.plugins.github.GitHubMultiModule</sonar.pluginClass>
 
     <!-- used for deployment to SonarSource Artifactory -->
-    <gitRepositoryName>sonar-github</gitRepositoryName>
+    <!--<gitRepositoryName>sonar-github</gitRepositoryName>-->
     <!-- Release: enable publication to Bintray -->
-    <artifactsToPublish>${project.groupId}:${project.artifactId}:jar</artifactsToPublish>
+    <!--<artifactsToPublish>${project.groupId}:${project.artifactId}:jar</artifactsToPublish>-->
   </properties>
 
-  <organization>
-    <name>SonarSource</name>
-    <url>http://www.sonarsource.com</url>
-  </organization>
+  <!--<organization>-->
+    <!--<name>SonarSource</name>-->
+    <!--<url>http://www.sonarsource.com</url>-->
+  <!--</organization>-->
 
-  <licenses>
-    <license>
-      <name>GNU LGPL 3</name>
-      <url>http://www.gnu.org/licenses/lgpl.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+  <!--<licenses>-->
+    <!--<license>-->
+      <!--<name>GNU LGPL 3</name>-->
+      <!--<url>http://www.gnu.org/licenses/lgpl.txt</url>-->
+      <!--<distribution>repo</distribution>-->
+    <!--</license>-->
+  <!--</licenses>-->
 
   <developers>
     <developer>

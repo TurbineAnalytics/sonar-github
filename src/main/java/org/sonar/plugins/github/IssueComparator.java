@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -19,11 +19,12 @@
  */
 package org.sonar.plugins.github;
 
-import java.util.Comparator;
-import java.util.Objects;
-import javax.annotation.Nullable;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.rule.Severity;
+
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.Objects;
 
 public final class IssueComparator implements Comparator<PostJobIssue> {
   @Override
