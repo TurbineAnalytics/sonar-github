@@ -19,10 +19,6 @@
  */
 package org.sonar.plugins.github;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.StreamSupport;
 import org.kohsuke.github.GHCommitState;
 import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
@@ -32,6 +28,11 @@ import org.sonar.api.batch.postjob.PostJobDescriptor;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.StreamSupport;
 
 /**
  * Compute comments to be added on the pull request.
@@ -60,7 +61,8 @@ public class PullRequestIssuePostJob implements PostJob {
 
   @Override
   public void execute(PostJobContext context) {
-    GlobalReport report = new GlobalReport(markDownUtils, gitHubPluginConfiguration.tryReportIssuesInline());
+    GlobalReport report = new GlobalReport(gitHubPluginConfiguration.module(),
+            markDownUtils, gitHubPluginConfiguration.tryReportIssuesInline());
     try {
       Map<InputFile, Map<Integer, StringBuilder>> commentsToBeAddedByLine = processIssues(report, context.issues());
 
@@ -68,9 +70,12 @@ public class PullRequestIssuePostJob implements PostJob {
 
       pullRequestFacade.deleteOutdatedComments();
 
+      int relevantOldIssues = pullRequestFacade.getRelevantOldIssues();
+
       pullRequestFacade.createOrUpdateGlobalComments(report.hasNewIssue() ? report.formatForMarkdown() : null);
 
-      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(), report.getStatusDescription());
+      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(relevantOldIssues),
+              report.getStatusDescription(relevantOldIssues));
     } catch (Exception e) {
       String msg = "SonarQube failed to complete the review of this pull request";
       LOG.error(msg, e);

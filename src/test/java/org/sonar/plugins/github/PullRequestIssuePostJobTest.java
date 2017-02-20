@@ -19,8 +19,6 @@
  */
 package org.sonar.plugins.github;
 
-import java.util.Arrays;
-import javax.annotation.CheckForNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.kohsuke.github.GHCommitState;
@@ -37,15 +35,16 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.System2;
 
+import javax.annotation.CheckForNull;
+import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class PullRequestIssuePostJobTest {
 
@@ -205,7 +204,7 @@ public class PullRequestIssuePostJobTest {
 
     pullRequestIssuePostJob.execute(context);
 
-    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.SUCCESS, "SonarQube reported 1 issue, no criticals or blockers");
+    verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no criticals or blockers");
   }
 
   @Test
