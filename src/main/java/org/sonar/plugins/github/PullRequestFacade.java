@@ -33,10 +33,7 @@ import org.sonar.api.utils.log.Loggers;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,8 +45,13 @@ import java.util.regex.Pattern;
 public class PullRequestFacade {
 
     private static final Logger LOG = Loggers.get(PullRequestFacade.class);
-    private static final String reviewPattern = "(\\d+)\\b( issue[s ])\\b";
-    private static final Pattern p = Pattern.compile(reviewPattern);
+    private static final String reviewPatternForIssues = "(\\d+)\\b( issue[s ])\\b";
+    private static final String reviewPatternForCritical = "(\\d+)\\b( critical)\\b";
+    private static final String reviewPatternForBlocker = "(\\d+)\\b( blocker)\\b";
+
+    private static final Pattern patternForAllIssues = Pattern.compile(reviewPatternForIssues);
+    private static final Pattern patternForCriticalIssues = Pattern.compile(reviewPatternForCritical);
+    private static final Pattern patternForBlockers = Pattern.compile(reviewPatternForBlocker);
 
     static final String COMMIT_CONTEXT = "sonarqube";
 
@@ -236,22 +238,37 @@ public class PullRequestFacade {
         }
     }
 
-    public int getRelevantOldIssues() {
-        int howMany = 0;
+    public List<Integer> getRelevantOldIssues() {
+        int oldIssues = 0;
+        int oldCriticalOnly = 0;
+        int oldBlockersOnly = 0;
+
         try {
             for (GHIssueComment review : pr.listComments()) {
                 if (!review.getBody().contains(config.module())) {
-                    Matcher m = p.matcher(review.getBody());
-                    if (m.find()) {
-                        String number = m.group(1);
-                        howMany += Integer.parseInt(number);
+                    Matcher allIssuesMatcher = patternForAllIssues.matcher(review.getBody());
+                    if (allIssuesMatcher.find()) {
+                        String number = allIssuesMatcher.group(1);
+                        oldIssues += Integer.parseInt(number);
+                    }
+                    Matcher criticalMatcher = patternForCriticalIssues.matcher(review.getBody());
+                    if (criticalMatcher.find()) {
+                        String number = criticalMatcher.group(1);
+                        oldCriticalOnly += Integer.parseInt(number);
+                    }
+                    Matcher blockersMatcher = patternForBlockers.matcher(review.getBody());
+                    if (blockersMatcher.find()) {
+                        String number = blockersMatcher.group(1);
+                        oldBlockersOnly += Integer.parseInt(number);
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return howMany;
+
+        List<Integer> list =Arrays.asList(oldIssues, oldCriticalOnly, oldBlockersOnly);
+        return list;
     }
 
     public void createOrUpdateGlobalComments(@Nullable String markup) {

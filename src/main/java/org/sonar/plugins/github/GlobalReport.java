@@ -24,6 +24,7 @@ import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.rule.Severity;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Locale;
 
 public class GlobalReport {
@@ -96,9 +97,9 @@ public class GlobalReport {
         builder.appendExtraIssues();
     }
 
-    public String getStatusDescription(Integer oldIssues) {
+    public String getStatusDescription(List<Integer> issues) {
         StringBuilder sb = new StringBuilder();
-        appendNewIssuesInline(sb, oldIssues);
+        appendNewIssuesInline(sb, issues);
         return sb.toString();
     }
 
@@ -120,16 +121,17 @@ public class GlobalReport {
         appendNewIssues(builder, Severity.INFO);
     }
 
-    private void appendNewIssuesInline(StringBuilder sb, Integer oldIssues) {
+    private void appendNewIssuesInline(StringBuilder sb, List<Integer> oldIssues) {
         sb.append("SonarQube reported ");
         int newIssues = newIssues(Severity.BLOCKER) + newIssues(Severity.CRITICAL) + newIssues(Severity.MAJOR) + newIssues(Severity.MINOR) + newIssues(Severity.INFO);
-        newIssues += oldIssues;
+        newIssues += oldIssues.get(0);
         if (newIssues > 0) {
             sb.append(newIssues).append(" issue" + (newIssues > 1 ? "s" : "")).append(",");
-            int newCriticalOrBlockerIssues = newIssues(Severity.BLOCKER) + newIssues(Severity.CRITICAL);
+            int newCriticalOrBlockerIssues = newIssues(Severity.BLOCKER) + newIssues(Severity.CRITICAL)
+                    + oldIssues.get(1) + oldIssues.get(2);
             if (newCriticalOrBlockerIssues > 0) {
-                appendNewIssuesInline(sb, Severity.CRITICAL);
-                appendNewIssuesInline(sb, Severity.BLOCKER);
+                appendNewIssuesInline(sb, Severity.CRITICAL, oldIssues.get(1));
+                appendNewIssuesInline(sb, Severity.BLOCKER, oldIssues.get(2));
             } else {
                 sb.append(" no criticals or blockers");
             }
@@ -138,8 +140,8 @@ public class GlobalReport {
         }
     }
 
-    private void appendNewIssuesInline(StringBuilder sb, Severity severity) {
-        int issueCount = newIssues(severity);
+    private void appendNewIssuesInline(StringBuilder sb, Severity severity, Integer oldIssues) {
+        int issueCount = newIssues(severity) + oldIssues;
         if (issueCount > 0) {
             if (sb.charAt(sb.length() - 1) == ',') {
                 sb.append(" with ");

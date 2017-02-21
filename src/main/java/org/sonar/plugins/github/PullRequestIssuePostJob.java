@@ -31,6 +31,7 @@ import org.sonar.api.utils.log.Loggers;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
@@ -70,12 +71,12 @@ public class PullRequestIssuePostJob implements PostJob {
 
       pullRequestFacade.deleteOutdatedComments();
 
-      int relevantOldIssues = pullRequestFacade.getRelevantOldIssues();
+      List<Integer> issuesCriticalAndBlockers = pullRequestFacade.getRelevantOldIssues();
 
       pullRequestFacade.createOrUpdateGlobalComments(report.hasNewIssue() ? report.formatForMarkdown() : null);
 
-      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(relevantOldIssues),
-              report.getStatusDescription(relevantOldIssues));
+      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(issuesCriticalAndBlockers.get(0)),
+              report.getStatusDescription(issuesCriticalAndBlockers));
     } catch (Exception e) {
       String msg = "SonarQube failed to complete the review of this pull request";
       LOG.error(msg, e);
