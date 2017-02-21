@@ -75,7 +75,7 @@ public class PullRequestIssuePostJob implements PostJob {
 
       pullRequestFacade.createOrUpdateGlobalComments(report.hasNewIssue() ? report.formatForMarkdown() : null);
 
-      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(issuesCriticalAndBlockers.get(0)),
+      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(issuesCriticalAndBlockers),
               report.getStatusDescription(issuesCriticalAndBlockers));
     } catch (Exception e) {
       String msg = "SonarQube failed to complete the review of this pull request";

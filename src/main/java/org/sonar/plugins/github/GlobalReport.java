@@ -103,9 +103,10 @@ public class GlobalReport {
         return sb.toString();
     }
 
-    public GHCommitState getStatus(int oldIssues) {
-        return (oldIssues > 0 || newIssues(Severity.BLOCKER) > 0 || newIssues(Severity.CRITICAL) > 0
-                || newIssues(Severity.MAJOR) > 0 || newIssues(Severity.MINOR) > 0)
+    public GHCommitState getStatus(List<Integer> oldIssues) {
+        return (newIssues(Severity.CRITICAL) + oldIssues.get(1) > 0
+                || newIssues(Severity.BLOCKER) + oldIssues.get(2) > 0
+                || newIssues(Severity.MAJOR) + oldIssues.get(3) > 0)
                 ? GHCommitState.ERROR : GHCommitState.SUCCESS;
     }
 

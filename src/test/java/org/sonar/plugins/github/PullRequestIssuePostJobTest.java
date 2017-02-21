@@ -92,7 +92,7 @@ public class PullRequestIssuePostJobTest {
   @Test
   public void testPullRequestAnalysisNoIssue() {
     when(context.issues()).thenReturn(Arrays.<PostJobIssue>asList());
-    when(pullRequestFacade.getRelevantOldIssues()).thenReturn(Arrays.asList(0,0,0));
+    when(pullRequestFacade.getRelevantOldIssues()).thenReturn(Arrays.asList(0,0,0,0));
     pullRequestIssuePostJob.execute(context);
     verify(pullRequestFacade).createOrUpdateGlobalComments(null);
     verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.SUCCESS, "SonarQube reported no issues");
@@ -203,7 +203,7 @@ public class PullRequestIssuePostJobTest {
     when(context.issues()).thenReturn(Arrays.<PostJobIssue>asList(newIssue));
     when(pullRequestFacade.hasFile(inputFile1)).thenReturn(true);
     when(pullRequestFacade.hasFileLine(inputFile1, 1)).thenReturn(true);
-    when(pullRequestFacade.getRelevantOldIssues()).thenReturn(Arrays.asList(0,0,0));
+    when(pullRequestFacade.getRelevantOldIssues()).thenReturn(Arrays.asList(0,0,0,0));
     pullRequestIssuePostJob.execute(context);
 
     verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 1 issue, no criticals or blockers");

@@ -48,10 +48,12 @@ public class PullRequestFacade {
     private static final String reviewPatternForIssues = "(\\d+)\\b( issue[s ])\\b";
     private static final String reviewPatternForCritical = "(\\d+)\\b( critical)\\b";
     private static final String reviewPatternForBlocker = "(\\d+)\\b( blocker)\\b";
+    private static final String reviewPatternForMajor = "(\\d+)\\b( major)\\b";
 
     private static final Pattern patternForAllIssues = Pattern.compile(reviewPatternForIssues);
     private static final Pattern patternForCriticalIssues = Pattern.compile(reviewPatternForCritical);
     private static final Pattern patternForBlockers = Pattern.compile(reviewPatternForBlocker);
+    private static final Pattern patternForMajor = Pattern.compile(reviewPatternForMajor);
 
     static final String COMMIT_CONTEXT = "sonarqube";
 
@@ -242,6 +244,7 @@ public class PullRequestFacade {
         int oldIssues = 0;
         int oldCriticalOnly = 0;
         int oldBlockersOnly = 0;
+        int oldMajorsOnly = 0;
 
         try {
             for (GHIssueComment review : pr.listComments()) {
@@ -261,13 +264,18 @@ public class PullRequestFacade {
                         String number = blockersMatcher.group(1);
                         oldBlockersOnly += Integer.parseInt(number);
                     }
+                    Matcher majorMatcher = patternForMajor.matcher(review.getBody());
+                    if (blockersMatcher.find()) {
+                        String number = blockersMatcher.group(1);
+                        oldMajorsOnly += Integer.parseInt(number);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        List<Integer> list =Arrays.asList(oldIssues, oldCriticalOnly, oldBlockersOnly);
+        List<Integer> list =Arrays.asList(oldIssues, oldCriticalOnly, oldBlockersOnly, oldMajorsOnly);
         return list;
     }
 
