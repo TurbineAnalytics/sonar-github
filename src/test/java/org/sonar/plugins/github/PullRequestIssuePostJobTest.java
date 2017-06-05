@@ -132,7 +132,7 @@ public class PullRequestIssuePostJobTest {
     verify(pullRequestFacade)
       .createOrUpdateGlobalComments(
         contains(
-          "1. ![BLOCKER][BLOCKER] [Foo.php#L2](http://github/blob/abc123/src/Foo.php#L2): msg2 [![rule](https://raw.githubusercontent.com/SonarCommunity/sonar-github/master/images/rule.png)](http://myserver/coding_rules#rule_key=repo%3Arule)"));
+          "1. ![BLOCKER][BLOCKER] [Foo.php#L2](http://github/blob/abc123/src/Foo.php#L2): msg2 [![rule](https://sonarsource.github.io/sonar-github/rule.png)](http://myserver/coding_rules#rule_key=repo%3Arule)"));
 
     verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, "SonarQube reported 5 issues, with 5 blocker");
   }
@@ -233,7 +233,7 @@ public class PullRequestIssuePostJobTest {
     when(context.issues()).thenThrow(new IllegalStateException(innerMsg));
     pullRequestIssuePostJob.execute(context);
 
-    String msg = "SonarQube failed to complete the review of this pull request: " + innerMsg;
+    String msg = "SonarQube analysis failed: " + innerMsg;
     verify(pullRequestFacade).createOrUpdateSonarQubeStatus(GHCommitState.ERROR, msg);
   }
 }
