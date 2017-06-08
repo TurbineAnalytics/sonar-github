@@ -90,11 +90,11 @@ public class GitHubMultiModuleConfigurationTest {
     settings.removeProperty(CoreProperties.LINKS_SOURCES);
     assertThat(config.repository()).isEqualTo("SonarCommunity2/github-integration");
 
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "https://github.com/SonarSource/sonar-github.git");
+    settings.setProperty(GitHubMultiModule.GITHUB_REPO, "https://github.com/SonarSource/sonar-github.git");
     assertThat(config.repository()).isEqualTo("SonarSource/sonar-github");
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "http://github.com/SonarSource/sonar-github.git");
+    settings.setProperty(GitHubMultiModule.GITHUB_REPO, "http://github.com/SonarSource/sonar-github.git");
     assertThat(config.repository()).isEqualTo("SonarSource/sonar-github");
-    settings.setProperty(GitHubPlugin.GITHUB_REPO, "SonarCommunity3/github-integration");
+    settings.setProperty(GitHubMultiModule.GITHUB_REPO, "SonarCommunity3/github-integration");
     assertThat(config.repository()).isEqualTo("SonarCommunity3/github-integration");
   }
 
