@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -19,10 +19,6 @@
  */
 package org.sonar.plugins.github;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.StreamSupport;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.github.GHCommitState;
 import org.sonar.api.batch.fs.InputComponent;
@@ -33,6 +29,12 @@ import org.sonar.api.batch.postjob.PostJobDescriptor;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.StreamSupport;
 
 /**
  * Compute comments to be added on the pull request.
@@ -56,12 +58,13 @@ public class PullRequestIssuePostJob implements PostJob {
   public void describe(PostJobDescriptor descriptor) {
     descriptor
       .name("GitHub Pull Request Issue Publisher")
-      .requireProperty(GitHubPlugin.GITHUB_PULL_REQUEST);
+      .requireProperty(GitHubMultiModule.GITHUB_PULL_REQUEST);
   }
 
   @Override
   public void execute(PostJobContext context) {
-    GlobalReport report = new GlobalReport(markDownUtils, gitHubPluginConfiguration.tryReportIssuesInline());
+    GlobalReport report = new GlobalReport(gitHubPluginConfiguration.module(),
+            markDownUtils, gitHubPluginConfiguration.tryReportIssuesInline());
     try {
       Map<InputFile, Map<Integer, StringBuilder>> commentsToBeAddedByLine = processIssues(report, context.issues());
 
@@ -69,9 +72,12 @@ public class PullRequestIssuePostJob implements PostJob {
 
       pullRequestFacade.deleteOutdatedComments();
 
+      List<Integer> issuesCriticalAndBlockers = pullRequestFacade.getRelevantOldIssues();
+
       pullRequestFacade.createOrUpdateGlobalComments(report.hasNewIssue() ? report.formatForMarkdown() : null);
 
-      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(), report.getStatusDescription());
+      pullRequestFacade.createOrUpdateSonarQubeStatus(report.getStatus(issuesCriticalAndBlockers),
+              report.getStatusDescription(issuesCriticalAndBlockers));
     } catch (Exception e) {
       LOG.error("SonarQube analysis failed to complete the review of this pull request", e);
       pullRequestFacade.createOrUpdateSonarQubeStatus(GHCommitState.ERROR, StringUtils.abbreviate("SonarQube analysis failed: " + e.getMessage(), 140));

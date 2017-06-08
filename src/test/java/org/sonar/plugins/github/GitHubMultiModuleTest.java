@@ -1,5 +1,5 @@
 /*
- * SonarQube :: GitHub Plugin
+ * SonarQube :: GitHub MultiModule Plugin
  * Copyright (C) 2015-2017 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
@@ -25,12 +25,12 @@ import org.sonar.api.utils.Version;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class GitHubPluginTest {
+public class GitHubMultiModuleTest {
 
   @Test
   public void uselessTest() {
     Plugin.Context context = new Plugin.Context(Version.parse("5.6"));
-    new GitHubPlugin().define(context);
+    new GitHubMultiModule().define(context);
     assertThat(context.getExtensions().size()).isGreaterThan(1);
   }
 
