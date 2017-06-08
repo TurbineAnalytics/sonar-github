@@ -9,7 +9,7 @@
     <relativePath />
   </parent>
 
-  <groupId>org.sonarsource.githubmultimodule</groupId>
+  <groupId>org.sonarsource.github</groupId>
   <artifactId>sonar-github-multimodule-plugin</artifactId>
   <name>SonarQube :: GitHub MultiModule Plugin</name>
   <packaging>sonar-plugin</packaging>
