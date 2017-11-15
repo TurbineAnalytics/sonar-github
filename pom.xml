@@ -13,8 +13,8 @@
   <artifactId>sonar-github-multimodule-plugin</artifactId>
   <name>SonarQube :: GitHub MultiModule Plugin</name>
   <packaging>sonar-plugin</packaging>
-  <version>1.5-CBD</version>
-  <description>Provide some integration between GitHub and SonarQube (Modified)</description>
+  <version>1.6-CBD</version>
+  <description>Provide some integration between GitHub and SonarQube (Modified). Updated for longs.</description>
   <url>http://redirect.sonarsource.com/plugins/github.html</url>
   <inceptionYear>2015</inceptionYear>
   
@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.kohsuke</groupId>
       <artifactId>github-api</artifactId>
-      <version>1.76</version>
+      <version>1.90</version>
     </dependency>
     <!-- Override version used by GitHub API -->
     <dependency>
